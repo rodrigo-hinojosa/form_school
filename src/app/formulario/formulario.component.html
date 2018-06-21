@@ -1,0 +1,824 @@
+<div fxLayoutAlign="center center">
+
+  <div fxFlex="80" fxFlex.sm="100" fxFlex.xs="100">
+
+    <mat-card>
+
+      <mat-card-header>
+
+        <div fxHide fxShow.gt-sm class="position-absolute">
+          <img class="pl-3" src="../../assets/images/logo.gif">
+        </div>
+
+        <div fxFlex="100" class="text-center">
+          <h2>
+            <span>FORMULARIO DE POSTULACIÓN</span>
+          </h2>
+        </div>
+
+      </mat-card-header>
+
+      <mat-card-content class="pt-4">
+
+        <mat-vertical-stepper [linear]="true">
+
+          <ng-template matStepperIcon="edit">
+            <mat-icon>check</mat-icon>
+          </ng-template>
+
+          <mat-step [stepControl]="firstStepPostulationForm">
+
+            <form [formGroup]="firstStepPostulationForm">
+
+              <ng-template matStepLabel>OTROS ANTECEDENTES DEL ALUMNO (A)</ng-template>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nombres</mat-label>
+                  <input matInput placeholder="Nombres" formControlName="studentName" required
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentName.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Apellidos</mat-label>
+                  <input matInput placeholder="Apellidos" formControlName="studentLastname" required
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentLastname?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentLastname.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentLastname')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Rut</mat-label>
+                  <input matInput placeholder="Rut" formControlName="studentRun" required
+                         (keyup)="onSetDv('firstStepPostulationForm', 'studentRunDv', $event.target.value)">
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentRun?.length ||
+                    0}}/8
+                  </mat-hint>
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{firstStepPostulationForm.value.studentRunDv}}</span>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentRun.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentRun')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input matInput [matDatepicker]="studentBirthdayPicker" placeholder="Fecha de nacimiento"
+                         formControlName="studentBirthday" required readonly
+                         (click)="studentBirthdayPicker.open()" (focus)="studentBirthdayPicker.open()">
+                  <mat-datepicker-toggle matSuffix [for]="studentBirthdayPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #studentBirthdayPicker></mat-datepicker>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentBirthday.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentBirthday')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nacionalidad</mat-label>
+                  <mat-select formControlName="studentNationality" placeholder="Nacionalidad" required>
+                    <mat-select-trigger>
+                      <span>{{ firstStepPostulationForm.value.studentNationality }}</span>
+                    </mat-select-trigger>
+                    <ngx-mat-select-search formControlName="selectCountriesFilter" placeholderLabel="Buscar"
+                                           noEntriesFoundLabel="No hay resultados"></ngx-mat-select-search>
+                    <mat-option *ngFor="let country of filteredCountries | async" [value]="country.name">
+                      {{country.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentNationality.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentNationality')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput placeholder="Teléfono" formControlName="studentPhone" required>
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentPhone?.length ||
+                    0}}/9
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentPhone.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentPhone')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Dirección</mat-label>
+                  <input matInput placeholder="Dirección" formControlName="studentAddres" required>
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentAddres?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentAddres.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentAddres')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Condominio</mat-label>
+                  <input matInput placeholder="Condominio" formControlName="studentCondominium" required>
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentCondominium?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentCondominium.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentCondominium')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Comuna</mat-label>
+                  <mat-select formControlName="studentAddresDivision" placeholder="Comuna" required>
+                    <mat-select-trigger>
+                      <span>{{ firstStepPostulationForm.value.studentAddresDivision }}</span>
+                    </mat-select-trigger>
+                    <ngx-mat-select-search formControlName="selectDistrictsFilter" placeholderLabel="Buscar"
+                                           noEntriesFoundLabel="No hay resultados"></ngx-mat-select-search>
+                    <mat-option *ngFor="let district of filteredDistricts | async" [value]="district">
+                      {{district}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentAddresDivision.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentAddresDivision')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nivel a postular</mat-label>
+                  <mat-select formControlName="studentCourseLevel" placeholder="Nivel a postular" required>
+                    <mat-select-trigger>
+                      <span>{{ firstStepPostulationForm.value.studentCourseLevel }}</span>
+                    </mat-select-trigger>
+                    <ngx-mat-select-search formControlName="selectCoursesFilter" placeholderLabel="Buscar"
+                                           noEntriesFoundLabel="No hay resultados"></ngx-mat-select-search>
+                    <mat-option *ngFor="let course of filteredCourses | async" [value]="course.name">
+                      {{course.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentCourseLevel.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentCourseLevel')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Colegio o jardín que proviene</mat-label>
+                  <input matInput placeholder="Colegio o jardín que proviene"
+                         formControlName="studentSchoolWhereHeComes">
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentSchoolWhereHeComes?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentSchoolWhereHeComes.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentSchoolWhereHeComes')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Otro colegio al que ha postulado</mat-label>
+                  <input matInput placeholder="Otro colegio al que ha postulado"
+                         formControlName="studentAnotherPostulatedSchool">
+                  <mat-hint align="end">{{firstStepPostulationForm.value.studentAnotherPostulatedSchool?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="firstStepPostulationForm.controls.studentAnotherPostulatedSchool.invalid">
+                    {{getErrorMessage('firstStepPostulationForm', 'studentAnotherPostulatedSchool')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" class="pt-2" fxLayoutAlign="center center">
+                <button mat-raised-button color="primary" matStepperNext [disabled]="firstStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="secondStepPostulationForm">
+
+            <form [formGroup]="secondStepPostulationForm">
+
+              <ng-template matStepLabel>ANTECEDENTES DEL PADRE</ng-template>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nombres</mat-label>
+                  <input matInput placeholder="Nombres" formControlName="fatherName" required>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherName.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Apellidos</mat-label>
+                  <input matInput placeholder="Apellidos" formControlName="fatherLastname" required>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherLastname?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherLastname.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherLastname')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Rut</mat-label>
+                  <input matInput placeholder="Rut" formControlName="fatherRun" required
+                         (keyup)="onSetDv('secondStepPostulationForm', 'fatherRunDv', $event.target.value)">
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{secondStepPostulationForm.value.fatherRunDv}}</span>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherRun?.length ||
+                    0}}/8
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherRun.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherRun')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input matInput [matDatepicker]="fatherBirthday" placeholder="Fecha de nacimiento"
+                         formControlName="fatherBirthday" required readonly (click)="fatherBirthday.open()"
+                         (focus)="fatherBirthday.open()">
+                  <mat-datepicker-toggle matSuffix [for]="fatherBirthday"></mat-datepicker-toggle>
+                  <mat-datepicker #fatherBirthday></mat-datepicker>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherBirthday.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherBirthday')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput placeholder="Teléfono" formControlName="fatherPhone" required>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherPhone?.length ||
+                    0}}/9
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherPhone.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherPhone')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Colegio donde estudió Ed. Media</mat-label>
+                  <input matInput placeholder="Colegio donde estudió Ed. Media" formControlName="fatherSecondary">
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherSecondary?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherSecondary.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherSecondary')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Lugar donde realizo estudios superiores</mat-label>
+                  <input matInput placeholder="Lugar donde realizo estudios superiores"
+                         formControlName="fatherUniversityStudies">
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherUniversityStudies?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherUniversityStudies.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherUniversityStudies')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Profesión o actividad</mat-label>
+                  <input matInput placeholder="Profesión o actividad" formControlName="fatherProfession" required>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherProfession?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherProfession.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherProfession')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Institución o empresa donde trabaja</mat-label>
+                  <input matInput placeholder="Institución o empresa donde trabaja"
+                         formControlName="fatherWhereHeWorks">
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherWhereHeWorks?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherWhereHeWorks.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherWhereHeWorks')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Cargo que desempeña</mat-label>
+                  <input matInput placeholder="Cargo que desempeña" formControlName="fatherWorksPosition">
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherWorksPosition?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherWorksPosition.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherWorksPosition')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Correo electrónico</mat-label>
+                  <input matInput placeholder="Correo electrónico" formControlName="fatherEmail" required>
+                  <mat-hint align="end">{{secondStepPostulationForm.value.fatherEmail?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="secondStepPostulationForm.controls.fatherEmail.invalid">
+                    {{getErrorMessage('secondStepPostulationForm', 'fatherEmail')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary" [disabled]="secondStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="thirdStepPostulationForm">
+
+            <form [formGroup]="thirdStepPostulationForm">
+
+              <ng-template matStepLabel>ANTECEDENTES DE LA MADRE</ng-template>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nombres</mat-label>
+                  <input matInput placeholder="Nombres" formControlName="motherName" required>
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherName.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Apellidos</mat-label>
+                  <input matInput placeholder="Apellidos" formControlName="motherLastname" required>
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherLastname?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherLastname.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherLastname')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Rut</mat-label>
+                  <input matInput placeholder="Rut" formControlName="motherRun" required
+                         (keyup)="onSetDv('thirdStepPostulationForm', 'motherRunDv', $event.target.value)">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherRun?.length ||
+                    0}}/8
+                  </mat-hint>
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{thirdStepPostulationForm.value.motherRunDv}}</span>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherRun.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherRun')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input matInput [matDatepicker]="motherBirthday" placeholder="Fecha de nacimiento"
+                         formControlName="motherBirthday" required readonly (click)="motherBirthday.open()"
+                         (focus)="motherBirthday.open()">
+                  <mat-datepicker-toggle matSuffix [for]="motherBirthday"></mat-datepicker-toggle>
+                  <mat-datepicker #motherBirthday></mat-datepicker>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherBirthday.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherBirthday')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput placeholder="Teléfono" formControlName="motherPhone" required>
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherPhone?.length ||
+                    0}}/9
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherPhone.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherPhone')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Colegio donde estudió Ed. Media</mat-label>
+                  <input matInput placeholder="Colegio donde estudió Ed. Media" formControlName="motherSecondary">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherSecondary?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherSecondary.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherSecondary')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Lugar donde realizo estudios superiores</mat-label>
+                  <input matInput placeholder="Lugar donde realizo estudios superiores"
+                         formControlName="motherUniversityStudies">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherUniversityStudies?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherUniversityStudies.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherUniversityStudies')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Profesión o actividad</mat-label>
+                  <input matInput placeholder="Profesión o actividad" formControlName="motherProfession">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherProfession?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherProfession.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherProfession')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Institución o empresa donde trabaja</mat-label>
+                  <input matInput placeholder="Institución o empresa donde trabaja"
+                         formControlName="motherWhereHeWorks">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherWhereHeWorks?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherWhereHeWorks.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherWhereHeWorks')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Cargo que desempeña</mat-label>
+                  <input matInput placeholder="Cargo que desempeña" formControlName="motherWorksPosition">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherWorksPosition?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherWorksPosition.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherWorksPosition')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Correo electrónico</mat-label>
+                  <input matInput placeholder="Correo electrónico" formControlName="motherEmail">
+                  <mat-hint align="end">{{thirdStepPostulationForm.value.motherEmail?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="thirdStepPostulationForm.controls.motherEmail.invalid">
+                    {{getErrorMessage('thirdStepPostulationForm', 'motherEmail')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary" [disabled]="thirdStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="fourthStepPostulationForm">
+
+            <form [formGroup]="fourthStepPostulationForm">
+
+              <ng-template matStepLabel>SITUACIÓN FAMILIAR</ng-template>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Alumno vive con</mat-label>
+                  <mat-select placeholder="Alumno vive con" formControlName="studenLivesWith">
+                    <mat-option *ngFor="let family of family" [value]="family">
+                      {{ family }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="fourthStepPostulationForm.controls.studenLivesWith.invalid">
+                    {{getErrorMessage('fourthStepPostulationForm', 'studenLivesWith')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Número de hijos</mat-label>
+                  <mat-select placeholder="Número de hijos" formControlName="numberOfChildren">
+                    <mat-option *ngFor="let children of childrens" [value]="children">
+                      {{ children }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="fourthStepPostulationForm.controls.numberOfChildren.invalid">
+                    {{getErrorMessage('fourthStepPostulationForm', 'studenLivesWith')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Lugar que ocupa</mat-label>
+                  <mat-select placeholder="Lugar que ocupa" formControlName="placeThatHeOccupies">
+                    <mat-option *ngFor="let place of places" [value]="place">
+                      {{ place }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="fourthStepPostulationForm.controls.placeThatHeOccupies.invalid">
+                    {{getErrorMessage('fourthStepPostulationForm', 'placeThatHeOccupies')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <div fxLayout="column">
+                  <h4>Situación de los padres</h4>
+
+                  <mat-radio-group formControlName="parentsSituations" fxLayout="row" fxLayout.sm="column"
+                                   fxLayout.xs="column" fxLayoutGap="10px">
+                    <mat-radio-button *ngFor="let situation of parentsSituation" [checked]="situation === 'Casados'"
+                                      (change)="parentsSituationsCheckSelected($event)" [value]="situation">
+                      {{ situation }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+
+                </div>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Especificación de otros</mat-label>
+                  <textarea matInput placeholder="Especificación de otros" hintLabel="Máximo 500 caracteres"
+                            formControlName="familySituationOthersSpecifications"></textarea>
+                  <mat-hint align="end">{{fourthStepPostulationForm.value.familySituationOthersSpecifications?.length ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="fourthStepPostulationForm.controls.familySituationOthersSpecifications.invalid">
+                    {{getErrorMessage('fourthStepPostulationForm', 'familySituationOthersSpecifications')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary" [disabled]="fourthStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="fifthStepPostulationForm">
+
+            <form [formGroup]="fifthStepPostulationForm">
+
+              <ng-template matStepLabel>OTROS ANTECEDENTES DEL ALUMNO (A)</ng-template>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+                  <h4>Ha sido atendido(a) por algún especialista</h4>
+
+                  <mat-radio-group formControlName="hasBeenAtendedBySpecialist" fxLayoutGap="40px"
+                                   (change)="hasBeenAtendedBySpecialistCheckSelected($event)">
+                    <mat-radio-button value="SI">Si</mat-radio-button>
+                    <mat-radio-button checked value="NO">No</mat-radio-button>
+                  </mat-radio-group>
+
+                </div>
+
+              </div>
+
+              <div ngClass.sm="pt-5" ngClass.xs="pt-5" class="pt-4" fxLayout="row" fxLayout.sm="column"
+                   fxLayout.xs="column" fxLayoutGap="20px"
+                   fxLayoutAlign="space-around">
+
+                <mat-checkbox formControlName="psychologist" value="psicologo">Psicólogo</mat-checkbox>
+                <mat-checkbox formControlName="neurologist" value="neurologo">Neurólogo</mat-checkbox>
+                <mat-checkbox formControlName="psychiatrist" value="psiquiatra">Psiquiatra</mat-checkbox>
+                <mat-checkbox formControlName="ophthalmologist" value="oftalmologo">Oftalmólogo</mat-checkbox>
+                <mat-checkbox formControlName="studentAntecedenstOthers" value="otros"
+                              (change)="studentAntecedenstOthersCheckSelected($event)">Otros
+                </mat-checkbox>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Especificación de otros</mat-label>
+                  <textarea matInput placeholder="Especificación de otros" hintLabel="Máximo 500 caracteres"
+                            formControlName="studentAntecedenstOthersSpecifications"></textarea>
+                  <mat-hint align="end">{{fifthStepPostulationForm.value.studentAntecedenstOthersSpecifications?.length
+                    ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="fifthStepPostulationForm.controls.studentAntecedenstOthersSpecifications.invalid">
+                    {{getErrorMessage('fifthStepPostulationForm', 'studentAntecedenstOthersSpecifications')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Nombre del especialista</mat-label>
+                  <input matInput placeholder="Nombre del especialista" formControlName="specialistName"
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{fifthStepPostulationForm.value.specialistName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="fifthStepPostulationForm.controls.specialistName.invalid">
+                    {{getErrorMessage('fifthStepPostulationForm', 'specialistName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Fecha de la última consulta</mat-label>
+                  <input matInput [matDatepicker]="dateLastConsultationPicker" placeholder="Fecha de la última consulta"
+                         formControlName="dateLastConsultation" readonly
+                         (click)="dateLastConsultation.open()" (focus)="dateLastConsultationPicker.open()">
+                  <mat-datepicker-toggle matSuffix [for]="dateLastConsultationPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #dateLastConsultationPicker></mat-datepicker>
+                  <mat-error *ngIf="fifthStepPostulationForm.controls.dateLastConsultation.invalid">
+                    {{getErrorMessage('fifthStepPostulationForm', 'dateLastConsultation')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary" [disabled]="fifthStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="sixthStepPostulationForm">
+
+            <form [formGroup]="sixthStepPostulationForm">
+
+              <ng-template matStepLabel>RAZONES DE POSTULACIÓN AL COLEGIO SAINT ANDREW</ng-template>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Detalle</mat-label>
+                  <textarea matInput placeholder="Detalle" hintLabel="Máximo 500 caracteres"
+                            formControlName="reasonsForApplicationDetails"></textarea>
+                  <mat-hint align="end">{{sixthStepPostulationForm.value.reasonsForApplicationDetails?.length
+                    ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="sixthStepPostulationForm.controls.reasonsForApplicationDetails.invalid">
+                    {{getErrorMessage('sixthStepPostulationForm', 'reasonsForApplicationDetails')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary" [disabled]="sixthStepPostulationForm.invalid">
+                  Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="seventhStepPostulationForm">
+
+            <form [formGroup]="seventhStepPostulationForm">
+
+              <ng-template matStepLabel>DESCRIPCIÓN BREVE DEL POSTULANTE</ng-template>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Detalle</mat-label>
+                  <textarea matInput placeholder="Detalle" hintLabel="Máximo 500 caracteres"
+                            formControlName="studenDescriptionDetails"></textarea>
+                  <mat-hint align="end">{{seventhStepPostulationForm.value.studenDescriptionDetails?.length
+                    ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="seventhStepPostulationForm.controls.studenDescriptionDetails.invalid">
+                    {{getErrorMessage('seventhStepPostulationForm', 'studenDescriptionDetails')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary"
+                        [disabled]="seventhStepPostulationForm.invalid">Siguiente
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="eighthStepPostulationForm">
+
+            <form [formGroup]="eighthStepPostulationForm">
+
+              <ng-template matStepLabel>PERSONA QUE LO INSCRIBE (Nombre completo y parentesco)</ng-template>
+
+              <div class="pt-2" fxLayoutAlign="space-evenly">
+                <button mat-raised-button matStepperPrevious color="primary">Volver</button>
+                <button mat-raised-button matStepperNext color="primary">Siguiente</button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="ninethStepPostulationForm">
+
+            <form [formGroup]="ninethStepPostulationForm">
+
+              <ng-template matStepLabel>DECLARACIÓN</ng-template>
+
+              <div class="pt-2" fxLayoutAlign="center center">
+                <button mat-raised-button color="primary" (click)="submit($event.target)">
+                  Terminar
+                </button>
+              </div>
+
+            </form>
+
+          </mat-step>
+
+        </mat-vertical-stepper>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  </div>
+
+</div>
