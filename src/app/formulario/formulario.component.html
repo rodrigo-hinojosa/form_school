@@ -788,6 +788,65 @@
 
               <ng-template matStepLabel>PERSONA QUE LO INSCRIBE (Nombre completo y parentesco)</ng-template>
 
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nombres</mat-label>
+                  <input matInput placeholder="Nombres" formControlName="personWhoInscribesName" required
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{eighthStepPostulationForm.value.personWhoInscribesName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="eighthStepPostulationForm.controls.personWhoInscribesName.invalid">
+                    {{getErrorMessage('eighthStepPostulationForm', 'personWhoInscribesName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Apellidos</mat-label>
+                  <input matInput placeholder="Apellidos" formControlName="personWhoInscribesLastname" required
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{eighthStepPostulationForm.value.personWhoInscribesLastname?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="eighthStepPostulationForm.controls.personWhoInscribesLastname.invalid">
+                    {{getErrorMessage('eighthStepPostulationForm', 'personWhoInscribesLastname')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Parentesco</mat-label>
+                  <mat-select placeholder="Parentesco" formControlName="personWhoInscribesRelationship">
+                    <mat-option value="mama">Mamá</mat-option>
+                    <mat-option value="papa">Papá</mat-option>
+                    <mat-option value="abuelos">Abuelos</mat-option>
+                    <mat-option value="tios">Tios</mat-option>
+                    <mat-option value="primos">Primos</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="eighthStepPostulationForm.controls.personWhoInscribesRelationship.invalid">
+                    {{getErrorMessage('eighthStepPostulationForm', 'personWhoInscribesRelationship')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div ngClass.sm="pt-4" ngClass.xs="pt-4" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field fxFlex="98" appearance="outline">
+                  <mat-label>Otros</mat-label>
+                  <textarea matInput placeholder="otros" hintLabel="Máximo 500 caracteres"
+                            formControlName="personWhoInscribesOthers"></textarea>
+                  <mat-hint align="end">{{eighthStepPostulationForm.value.personWhoInscribesOthers?.length
+                    ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="eighthStepPostulationForm.controls.personWhoInscribesOthers.invalid">
+                    {{getErrorMessage('eighthStepPostulationForm', 'personWhoInscribesOthers')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
               <div class="pt-2" fxLayoutAlign="space-evenly">
                 <button mat-raised-button matStepperPrevious color="primary">Volver</button>
                 <button mat-raised-button matStepperNext color="primary">Siguiente</button>
@@ -803,8 +862,65 @@
 
               <ng-template matStepLabel>DECLARACIÓN</ng-template>
 
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <p>En mi condición de apoderado de&nbsp;&nbsp;
+                  <mat-form-field fxFlex="100">
+                    <mat-label>Nombre completo de alumno</mat-label>
+                    <input matInput placeholder="Nombre completo de alumno" formControlName="attorneyDeclaration"
+                           required>
+                    <mat-error *ngIf="ninethStepPostulationForm.controls.attorneyDeclaration.invalid">
+                      {{getErrorMessage('ninethStepPostulationForm', 'attorneyDeclaration')}}
+                    </mat-error>
+                  </mat-form-field>
+                  * estoy de acuerdo y acepto el sistema de evaluación que el Colegio Saint Andrew aplica a cada uno de
+                  los postulantes a ingresar como alumnos regulares al establecimiento. Cualquiera sea el resultado
+                  final del examene de selección, lo aceptaré integramente, renunciando desde ya a toda posterior
+                  reclamación de cualquier indole y naturaleza.
+
+                  Asimismo, en caso de ser aceptado, informo estar en conocimiento y aceptar los procesos de matrículas
+                  y las Pautas de Convivencia publicadas en la pagina web del colegio.
+                </p>
+
+              </div>
+
+              <div fxLayout="column" fxLayout.sm="column" fxLayout.xs="column">
+
+                <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
+                  <mat-label>Nombre y apellido del Apoderado</mat-label>
+                  <input matInput placeholder="Nombre y apellido del Apoderado" formControlName="attorneyFullName"
+                         required
+                         hintLabel="Máximo 100 caracteres">
+                  <mat-hint align="end">{{ninethStepPostulationForm.value.attorneyFullName?.length ||
+                    0}}/100
+                  </mat-hint>
+                  <mat-error *ngIf="ninethStepPostulationForm.controls.attorneyFullName.invalid">
+                    {{getErrorMessage('ninethStepPostulationForm', 'attorneyFullName')}}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-radio-group fxLayoutAlign="center center" formControlName="agreeDeclaration" fxLayoutGap="40px"
+                                 (change)="agreeDeclarationCheckSelected($event)">
+                  <mat-radio-button value="SI">Si</mat-radio-button>
+                  <mat-radio-button checked value="NO">No</mat-radio-button>
+                </mat-radio-group>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+
+                <p class="pt-2">
+                  Es importante considerar que la aceptación de su hijo depende exclusivamente de las
+                  vacantes al curso al cual postula y del resultado de dichos exámenes.
+
+                  Santiago, {{dayName}}, {{day}} de {{month}} de {{year}}
+                </p>
+
+              </div>
+
               <div class="pt-2" fxLayoutAlign="center center">
-                <button mat-raised-button color="primary" (click)="submit($event.target)">
+                <button mat-raised-button color="primary" (click)="submit($event.target)"
+                        [disabled]="ninethStepPostulationForm.value.agreeDeclaration !== 'SI'">
                   Terminar
                 </button>
               </div>

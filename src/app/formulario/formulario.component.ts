@@ -26,6 +26,10 @@ export class FormularioComponent implements OnInit {
   loading: boolean;
   postulationInvalid: boolean;
   valueInvalidMessage: string;
+  year: string;
+  month: string;
+  day: string;
+  dayName: string;
   family: Array<string>;
   childrens: Array<string>;
   places: Array<string>;
@@ -50,6 +54,10 @@ export class FormularioComponent implements OnInit {
 
   filteredDistricts: Observable<any[]>;
   districts = district.list;
+
+  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayp', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Novimiembre', 'Diciembre'
+  ];
 
   constructor(private _formBuilder: FormBuilder) {
   }
@@ -96,6 +104,18 @@ export class FormularioComponent implements OnInit {
         startWith(''),
         map(val => this.filterDistricts(val))
       );
+
+    this.setLocaleDate();
+
+  }
+
+  setLocaleDate() {
+
+    let d = new Date();
+    this.dayName = d.toLocaleString('es-es', {weekday: 'long'});
+    this.day = ('0' + d.getDate()).slice(-2).toString();
+    this.month = this.monthNames[d.getMonth()];
+    this.year = d.getFullYear().toString();
 
   }
 
@@ -213,7 +233,10 @@ export class FormularioComponent implements OnInit {
   createEighthStepPostulationForm() {
 
     this.eighthStepPostulationForm = this._formBuilder.group({
-      // reasonsForApplicationDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      personWhoInscribesName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesLastname: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesRelationship: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesOthers: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
     });
 
   }
@@ -221,7 +244,9 @@ export class FormularioComponent implements OnInit {
   createNinethStepPostulationForm() {
 
     this.ninethStepPostulationForm = this._formBuilder.group({
-      // reasonsForApplicationDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      attorneyDeclaration: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      attorneyFullName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      agreeDeclaration: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]]
     });
 
   }
@@ -275,6 +300,22 @@ export class FormularioComponent implements OnInit {
   }
 
   studentAntecedenstOthersCheckSelected(e) {
+
+    if (e.checked) {
+
+      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].enable();
+
+    } else {
+
+      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].disable();
+
+    }
+
+  }
+
+  agreeDeclarationCheckSelected(e) {
 
     if (e.checked) {
 
