@@ -18,19 +18,24 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 
-import {FormularioComponent} from './formulario/formulario.component';
+import {FormComponent} from './form/form.component';
+import {DialogComponent} from './dialog/dialog.component';
 import {MY_FORMAT} from '@app/utilities/datepickerFormat';
+import {DvPipe} from './pipes/dv.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FormularioComponent
+    FormComponent,
+    DialogComponent,
+    DvPipe
   ],
   imports: [
     BrowserModule,
@@ -47,12 +52,16 @@ import {MY_FORMAT} from '@app/utilities/datepickerFormat';
     MatIconModule,
     MatCheckboxModule,
     MatDatepickerModule,
+    MatDialogModule,
     MatMomentDateModule,
     NgxMatSelectSearchModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMAT}
+  ],
+  entryComponents: [
+    DialogComponent
   ],
   bootstrap: [AppComponent]
 })

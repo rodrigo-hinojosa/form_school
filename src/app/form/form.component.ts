@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialog} from '@angular/material';
 
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
 
+import {Utils} from '@app/utilities';
 import {countries} from '@app/utilities/countries';
 import {courses} from '@app/utilities/coursesLevel';
 import {district} from '@app/utilities/district';
@@ -15,63 +17,70 @@ import {InputsValidators} from '@app/utilities/inputs.validators';
 import {Postulation} from '@app/models/postulation';
 
 import {POSTULATION_CONFIG as config} from '@app/postulation.config';
+import {DialogComponent} from '@app/dialog/dialog.component';
 
 @Component({
-  selector: 'app-formulario',
-  templateUrl: './formulario.component.html',
-  styleUrls: ['./formulario.component.css']
+  selector: 'app-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.css']
 })
-export class FormularioComponent implements OnInit {
+export class FormComponent implements OnInit {
 
-  loading: boolean;
-  postulationInvalid: boolean;
-  valueInvalidMessage: string;
-  year: string;
-  month: string;
-  day: string;
-  dayName: string;
-  family: Array<string>;
-  childrens: Array<string>;
-  places: Array<string>;
-  parentsSituation: Array<string>;
-  firstStepPostulationForm: FormGroup;
-  secondStepPostulationForm: FormGroup;
-  thirdStepPostulationForm: FormGroup;
-  fourthStepPostulationForm: FormGroup;
-  fifthStepPostulationForm: FormGroup;
-  sixthStepPostulationForm: FormGroup;
-  seventhStepPostulationForm: FormGroup;
-  eighthStepPostulationForm: FormGroup;
-  ninethStepPostulationForm: FormGroup;
+  public year: string;
+  public month: string;
+  public day: string;
+  public dayName: string;
+  public family: Array<string>;
+  public childrens: Array<string>;
+  public places: Array<string>;
+  public parentsSituation: Array<string>;
+  public firstStepPostulationForm: FormGroup;
+  public secondStepPostulationForm: FormGroup;
+  public thirdStepPostulationForm: FormGroup;
+  public fourthStepPostulationForm: FormGroup;
+  public fifthStepPostulationForm: FormGroup;
+  public sixthStepPostulationForm: FormGroup;
+  public seventhStepPostulationForm: FormGroup;
+  public eighthStepPostulationForm: FormGroup;
+  public ninethStepPostulationForm: FormGroup;
 
-  postulation = new Postulation();
+  private postulation: Postulation;
 
-  filteredCountries: Observable<any[]>;
-  countries = countries.list;
+  public filteredCountries: Observable<any[]>;
+  private countries: any;
 
-  filteredCourses: Observable<any[]>;
-  courses = courses.list;
+  public filteredCourses: Observable<any[]>;
+  private courses: any;
 
-  filteredDistricts: Observable<any[]>;
-  districts = district.list;
+  public filteredDistricts: Observable<any[]>;
+  private districts: any;
 
-  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayp', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Novimiembre', 'Diciembre'
-  ];
+  private monthNames: Array<any>;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder,
+              private _dialog: MatDialog) {
   }
 
   ngOnInit() {
+
+    this.postulation = new Postulation({});
+
+    this.countries = countries.list;
+    this.courses = courses.list;
+    this.districts = district.list;
 
     this.family = family.list;
     this.childrens = childrens.list;
     this.places = places.list;
     this.parentsSituation = parentsSituation.list;
 
+    this.monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayp', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Novimiembre', 'Diciembre'
+    ];
+
     this.createFirstStepPostulationForm();
 
-    this.createsecondStepPostulationForm();
+    this.createSecondStepPostulationForm();
 
     this.createThirdStepPostulationForm();
 
@@ -109,7 +118,27 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  setLocaleDate() {
+  private fillPostulationModel() {
+
+    this.firstStepPostulationForm.value.studentRunDv = Utils.getDv(this.firstStepPostulationForm.value.studentRun);
+
+    this.secondStepPostulationForm.value.fatherRunDv = Utils.getDv(this.secondStepPostulationForm.value.fatherRun);
+
+    this.thirdStepPostulationForm.value.motherRunDv = Utils.getDv(this.thirdStepPostulationForm.value.motherRun);
+
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.firstStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.secondStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.thirdStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.fourthStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.fifthStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.sixthStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.seventhStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.eighthStepPostulationForm.value));
+    Object.assign(this.postulation, Utils.getValueFromControlformToModel(this.postulation, this.ninethStepPostulationForm.value));
+
+  }
+
+  private setLocaleDate(): void {
 
     let d = new Date();
     this.dayName = d.toLocaleString('es-es', {weekday: 'long'});
@@ -119,7 +148,28 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createFirstStepPostulationForm() {
+  private filterCountries(name: string): any {
+
+    return this.countries.filter(country_ =>
+      country_.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
+
+  }
+
+  private filterCourses(name: string): any {
+
+    return this.courses.filter(course_ =>
+      course_.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
+
+  }
+
+  private filterDistricts(name: string): any {
+
+    return this.districts.filter(district_ =>
+      district_.toLowerCase().indexOf(name.toLowerCase()) === 0);
+
+  }
+
+  private createFirstStepPostulationForm(): void {
 
     this.firstStepPostulationForm = this._formBuilder.group({
       studentRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
@@ -142,7 +192,7 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createsecondStepPostulationForm() {
+  private createSecondStepPostulationForm(): void {
 
     this.secondStepPostulationForm = this._formBuilder.group({
       fatherRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
@@ -158,9 +208,10 @@ export class FormularioComponent implements OnInit {
       fatherWorksPosition: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       fatherEmail: ['', [Validators.maxLength(100), Validators.email]]
     });
+
   }
 
-  createThirdStepPostulationForm() {
+  private createThirdStepPostulationForm(): void {
 
     this.thirdStepPostulationForm = this._formBuilder.group({
       motherRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
@@ -179,10 +230,10 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createFourthStepPostulationForm() {
+  private createFourthStepPostulationForm(): void {
 
     this.fourthStepPostulationForm = this._formBuilder.group({
-      studenLivesWith: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      studentLivesWith: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       numberOfChildren: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       placeThatHeOccupies: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       parentsSituations: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
@@ -193,16 +244,16 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createFifthStepPostulationForm() {
+  private createFifthStepPostulationForm(): void {
 
     this.fifthStepPostulationForm = this._formBuilder.group({
-      hasBeenAtendedBySpecialist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      hasBeenAttendedBySpecialist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       psychologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       neurologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       psychiatrist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       ophthalmologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentAntecedenstOthers: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentAntecedenstOthersSpecifications: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      studentBackgroundOthers: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      studentBackgroundOthersSpecifications: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       specialistName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       dateLastConsultation: ['', [Validators.maxLength(8), InputsValidators.checkValidValueDate]],
       reason: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
@@ -210,11 +261,11 @@ export class FormularioComponent implements OnInit {
 
     this.fifthStepPostulationForm.disable();
 
-    this.fifthStepPostulationForm.controls['hasBeenAtendedBySpecialist'].enable();
+    this.fifthStepPostulationForm.controls['hasBeenAttendedBySpecialist'].enable();
 
   }
 
-  createSixthStepPostulationForm() {
+  private createSixthStepPostulationForm(): void {
 
     this.sixthStepPostulationForm = this._formBuilder.group({
       reasonsForApplicationDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
@@ -222,15 +273,15 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createSeventhStepPostulationForm() {
+  private createSeventhStepPostulationForm(): void {
 
     this.seventhStepPostulationForm = this._formBuilder.group({
-      studenDescriptionDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      studentDescriptionDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
     });
 
   }
 
-  createEighthStepPostulationForm() {
+  private createEighthStepPostulationForm(): void {
 
     this.eighthStepPostulationForm = this._formBuilder.group({
       personWhoInscribesName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
@@ -241,7 +292,7 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  createNinethStepPostulationForm() {
+  private createNinethStepPostulationForm(): void {
 
     this.ninethStepPostulationForm = this._formBuilder.group({
       attorneyDeclaration: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
@@ -251,19 +302,17 @@ export class FormularioComponent implements OnInit {
 
   }
 
-  submit(event: Event) {
-    alert(this.postulation);
-    console.log(this.postulation);
+  private OpenDialogToShow(postulation: Postulation): void {
+
+    this._dialog.open(DialogComponent, {
+      data: postulation,
+      height: '600px',
+      width: '600px'
+    });
+
   }
 
-  getDv(T: number) {
-    let M = 0, S = 1;
-    for (; T; T = Math.floor(T / 10))
-      S = (S + T % 10 * (9 - M++ % 6)) % 11;
-    return String(S ? S - 1 : 'K');
-  }
-
-  parentsSituationsCheckSelected(e) {
+  public parentsSituationsCheckSelected(e): void {
 
     if (e.value === 'Otros (especificar)') {
       this.fourthStepPostulationForm.controls['familySituationOthersSpecifications'].reset();
@@ -272,21 +321,22 @@ export class FormularioComponent implements OnInit {
       this.fourthStepPostulationForm.controls['familySituationOthersSpecifications'].reset();
       this.fourthStepPostulationForm.controls['familySituationOthersSpecifications'].disable();
     }
+
   }
 
-  hasBeenAtendedBySpecialistCheckSelected(e) {
+  public hasBeenAttendedBySpecialistCheckSelected(e): void {
 
     if (e.value === 'SI') {
 
       this.fifthStepPostulationForm.enable();
 
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].disable();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].disable();
 
     } else {
 
       Object.keys(this.fifthStepPostulationForm.controls).forEach(key => {
 
-        if (key !== 'hasBeenAtendedBySpecialist') {
+        if (key !== 'hasBeenAttendedBySpecialist') {
           this.fifthStepPostulationForm.controls[key].reset();
         }
       });
@@ -295,68 +345,43 @@ export class FormularioComponent implements OnInit {
 
     }
 
-    this.fifthStepPostulationForm.controls['hasBeenAtendedBySpecialist'].enable();
+    this.fifthStepPostulationForm.controls['hasBeenAttendedBySpecialist'].enable();
 
   }
 
-  studentAntecedenstOthersCheckSelected(e) {
+  public studentBackgroundOthersCheckSelected(e): void {
 
     if (e.checked) {
 
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].enable();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].enable();
 
     } else {
 
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].disable();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].disable();
 
     }
 
   }
 
-  agreeDeclarationCheckSelected(e) {
+  public agreeDeclarationCheckSelected(e): void {
 
     if (e.checked) {
 
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].enable();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].enable();
 
     } else {
 
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].reset();
-      this.fifthStepPostulationForm.controls['studentAntecedenstOthersSpecifications'].disable();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].reset();
+      this.fifthStepPostulationForm.controls['studentBackgroundOthersSpecifications'].disable();
 
     }
 
   }
 
-  onSetDv(formControl: string, control: string, value: number) {
-
-    this[formControl].value[control] = '';
-
-    if (Number.isInteger(Number(value))) {
-      this[formControl].value[control] = this.getDv(value);
-    }
-  }
-
-  filterCountries(name: string) {
-    return this.countries.filter(country_ =>
-      country_.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
-
-  filterCourses(name: string) {
-    return this.courses.filter(course_ =>
-      course_.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
-
-  filterDistricts(name: string) {
-    return this.districts.filter(district_ =>
-      district_.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
-
-
-  getErrorMessage(formGroup: string, control: string) {
+  public getErrorMessage(formGroup: string, control: string): string {
 
     if (control) {
 
@@ -385,5 +410,14 @@ export class FormularioComponent implements OnInit {
 
   }
 
+  public submit(event: Event): void {
+
+    event.preventDefault();
+
+    this.fillPostulationModel();
+
+    this.OpenDialogToShow(this.postulation);
+
+  }
 
 }

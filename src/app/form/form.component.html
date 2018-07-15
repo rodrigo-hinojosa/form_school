@@ -60,12 +60,11 @@
 
                 <mat-form-field class="pt-2" fxFlex="100" appearance="outline">
                   <mat-label>Rut</mat-label>
-                  <input matInput placeholder="Rut" formControlName="studentRun" required
-                         (keyup)="onSetDv('firstStepPostulationForm', 'studentRunDv', $event.target.value)">
+                  <input matInput placeholder="Rut" formControlName="studentRun" required>
                   <mat-hint align="end">{{firstStepPostulationForm.value.studentRun?.length ||
                     0}}/8
                   </mat-hint>
-                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{firstStepPostulationForm.value.studentRunDv}}</span>
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{firstStepPostulationForm.value.studentRun | dv}}</span>
                   <mat-error *ngIf="firstStepPostulationForm.controls.studentRun.invalid">
                     {{getErrorMessage('firstStepPostulationForm', 'studentRun')}}
                   </mat-error>
@@ -251,9 +250,8 @@
 
                 <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
                   <mat-label>Rut</mat-label>
-                  <input matInput placeholder="Rut" formControlName="fatherRun" required
-                         (keyup)="onSetDv('secondStepPostulationForm', 'fatherRunDv', $event.target.value)">
-                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{secondStepPostulationForm.value.fatherRunDv}}</span>
+                  <input matInput placeholder="Rut" formControlName="fatherRun" required>
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{secondStepPostulationForm.value.fatherRun | dv}}</span>
                   <mat-hint align="end">{{secondStepPostulationForm.value.fatherRun?.length ||
                     0}}/8
                   </mat-hint>
@@ -410,12 +408,11 @@
 
                 <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
                   <mat-label>Rut</mat-label>
-                  <input matInput placeholder="Rut" formControlName="motherRun" required
-                         (keyup)="onSetDv('thirdStepPostulationForm', 'motherRunDv', $event.target.value)">
+                  <input matInput placeholder="Rut" formControlName="motherRun" required>
                   <mat-hint align="end">{{thirdStepPostulationForm.value.motherRun?.length ||
                     0}}/8
                   </mat-hint>
-                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{thirdStepPostulationForm.value.motherRunDv}}</span>
+                  <span class="mr-100px" matSuffix> <strong>-</strong> &nbsp;{{thirdStepPostulationForm.value.motherRun | dv}}</span>
                   <mat-error *ngIf="thirdStepPostulationForm.controls.motherRun.invalid">
                     {{getErrorMessage('thirdStepPostulationForm', 'motherRun')}}
                   </mat-error>
@@ -543,13 +540,13 @@
 
                 <mat-form-field class="pr-2 pt-2" fxFlex="100" appearance="outline">
                   <mat-label>Alumno vive con</mat-label>
-                  <mat-select placeholder="Alumno vive con" formControlName="studenLivesWith">
+                  <mat-select placeholder="Alumno vive con" formControlName="studentLivesWith">
                     <mat-option *ngFor="let family of family" [value]="family">
                       {{ family }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="fourthStepPostulationForm.controls.studenLivesWith.invalid">
-                    {{getErrorMessage('fourthStepPostulationForm', 'studenLivesWith')}}
+                  <mat-error *ngIf="fourthStepPostulationForm.controls.studentLivesWith.invalid">
+                    {{getErrorMessage('fourthStepPostulationForm', 'studentLivesWith')}}
                   </mat-error>
                 </mat-form-field>
 
@@ -561,7 +558,7 @@
                     </mat-option>
                   </mat-select>
                   <mat-error *ngIf="fourthStepPostulationForm.controls.numberOfChildren.invalid">
-                    {{getErrorMessage('fourthStepPostulationForm', 'studenLivesWith')}}
+                    {{getErrorMessage('fourthStepPostulationForm', 'studentLivesWith')}}
                   </mat-error>
                 </mat-form-field>
 
@@ -634,8 +631,8 @@
                 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
                   <h4>Ha sido atendido(a) por algún especialista</h4>
 
-                  <mat-radio-group formControlName="hasBeenAtendedBySpecialist" fxLayoutGap="40px"
-                                   (change)="hasBeenAtendedBySpecialistCheckSelected($event)">
+                  <mat-radio-group formControlName="hasBeenAttendedBySpecialist" fxLayoutGap="40px"
+                                   (change)="hasBeenAttendedBySpecialistCheckSelected($event)">
                     <mat-radio-button value="SI">Si</mat-radio-button>
                     <mat-radio-button checked value="NO">No</mat-radio-button>
                   </mat-radio-group>
@@ -652,8 +649,8 @@
                 <mat-checkbox formControlName="neurologist" value="neurologo">Neurólogo</mat-checkbox>
                 <mat-checkbox formControlName="psychiatrist" value="psiquiatra">Psiquiatra</mat-checkbox>
                 <mat-checkbox formControlName="ophthalmologist" value="oftalmologo">Oftalmólogo</mat-checkbox>
-                <mat-checkbox formControlName="studentAntecedenstOthers" value="otros"
-                              (change)="studentAntecedenstOthersCheckSelected($event)">Otros
+                <mat-checkbox formControlName="studentBackgroundOthers" value="otros"
+                              (change)="studentBackgroundOthersCheckSelected($event)">Otros
                 </mat-checkbox>
 
               </div>
@@ -663,13 +660,13 @@
                 <mat-form-field fxFlex="100" appearance="outline">
                   <mat-label>Especificación de otros</mat-label>
                   <textarea matInput placeholder="Especificación de otros" hintLabel="Máximo 500 caracteres"
-                            formControlName="studentAntecedenstOthersSpecifications"></textarea>
-                  <mat-hint align="end">{{fifthStepPostulationForm.value.studentAntecedenstOthersSpecifications?.length
+                            formControlName="studentBackgroundOthersSpecifications"></textarea>
+                  <mat-hint align="end">{{fifthStepPostulationForm.value.studentBackgroundOthersSpecifications?.length
                     ||
                     0}}/500
                   </mat-hint>
-                  <mat-error *ngIf="fifthStepPostulationForm.controls.studentAntecedenstOthersSpecifications.invalid">
-                    {{getErrorMessage('fifthStepPostulationForm', 'studentAntecedenstOthersSpecifications')}}
+                  <mat-error *ngIf="fifthStepPostulationForm.controls.studentBackgroundOthersSpecifications.invalid">
+                    {{getErrorMessage('fifthStepPostulationForm', 'studentBackgroundOthersSpecifications')}}
                   </mat-error>
                 </mat-form-field>
 
@@ -698,6 +695,23 @@
                   <mat-datepicker #dateLastConsultationPicker></mat-datepicker>
                   <mat-error *ngIf="fifthStepPostulationForm.controls.dateLastConsultation.invalid">
                     {{getErrorMessage('fifthStepPostulationForm', 'dateLastConsultation')}}
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
+
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Motivo</mat-label>
+                  <textarea matInput placeholder="Motivo" hintLabel="Máximo 500 caracteres"
+                            formControlName="reason"></textarea>
+                  <mat-hint align="end">{{fifthStepPostulationForm.value.reason?.length
+                    ||
+                    0}}/500
+                  </mat-hint>
+                  <mat-error *ngIf="fifthStepPostulationForm.controls.reason.invalid">
+                    {{getErrorMessage('fifthStepPostulationForm', 'reason')}}
                   </mat-error>
                 </mat-form-field>
 
@@ -759,13 +773,13 @@
                 <mat-form-field fxFlex="100" appearance="outline">
                   <mat-label>Detalle</mat-label>
                   <textarea matInput placeholder="Detalle" hintLabel="Máximo 500 caracteres"
-                            formControlName="studenDescriptionDetails"></textarea>
-                  <mat-hint align="end">{{seventhStepPostulationForm.value.studenDescriptionDetails?.length
+                            formControlName="studentDescriptionDetails"></textarea>
+                  <mat-hint align="end">{{seventhStepPostulationForm.value.studentDescriptionDetails?.length
                     ||
                     0}}/500
                   </mat-hint>
-                  <mat-error *ngIf="seventhStepPostulationForm.controls.studenDescriptionDetails.invalid">
-                    {{getErrorMessage('seventhStepPostulationForm', 'studenDescriptionDetails')}}
+                  <mat-error *ngIf="seventhStepPostulationForm.controls.studentDescriptionDetails.invalid">
+                    {{getErrorMessage('seventhStepPostulationForm', 'studentDescriptionDetails')}}
                   </mat-error>
                 </mat-form-field>
 
@@ -873,7 +887,7 @@
                       {{getErrorMessage('ninethStepPostulationForm', 'attorneyDeclaration')}}
                     </mat-error>
                   </mat-form-field>
-                  * estoy de acuerdo y acepto el sistema de evaluación que el Colegio Saint Andrew aplica a cada uno de
+                  &nbsp; de acuerdo y acepto el sistema de evaluación que el Colegio Saint Andrew aplica a cada uno de
                   los postulantes a ingresar como alumnos regulares al establecimiento. Cualquiera sea el resultado
                   final del examene de selección, lo aceptaré integramente, renunciando desde ya a toda posterior
                   reclamación de cualquier indole y naturaleza.
@@ -919,8 +933,8 @@
               </div>
 
               <div class="pt-2" fxLayoutAlign="center center">
-                <button mat-raised-button color="primary" (click)="submit($event.target)"
-                        [disabled]="ninethStepPostulationForm.value.agreeDeclaration !== 'SI'">
+                <button mat-raised-button color="primary" (click)="submit($event)"
+                        [disabled]="ninethStepPostulationForm.value.agreeDeclaration !== 'SI' || ninethStepPostulationForm.invalid">
                   Terminar
                 </button>
               </div>
