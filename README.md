@@ -1,4 +1,4 @@
-# file Reader JS
+# Simple reactive form with steppers and validators
 
 ## This project use the following libraries
 
