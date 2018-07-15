@@ -690,7 +690,7 @@
                   <mat-label>Fecha de la última consulta</mat-label>
                   <input matInput [matDatepicker]="dateLastConsultationPicker" placeholder="Fecha de la última consulta"
                          formControlName="dateLastConsultation" readonly
-                         (click)="dateLastConsultation.open()" (focus)="dateLastConsultationPicker.open()">
+                         (click)="dateLastConsultationPicker.open()" (focus)="dateLastConsultationPicker.open()">
                   <mat-datepicker-toggle matSuffix [for]="dateLastConsultationPicker"></mat-datepicker-toggle>
                   <mat-datepicker #dateLastConsultationPicker></mat-datepicker>
                   <mat-error *ngIf="fifthStepPostulationForm.controls.dateLastConsultation.invalid">
