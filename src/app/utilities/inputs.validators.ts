@@ -18,7 +18,7 @@ export class InputsValidators {
 
     if (control.value) {
 
-      const regex = /^[a-zA-ZÑñáéíóúÁÉÍÓÚ,()._0-9\-#\n ]+$/;
+      const regex = /^[a-zA-ZÑñáéíóúÁÉÍÓÚ,()._',0-9\-#\n ]+$/;
       const isValid = regex.test(control.value);
       return isValid ? null : {validValue: true};
 

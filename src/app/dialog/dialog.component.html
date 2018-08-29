@@ -1,3 +1,60 @@
-<pre class="primary-color">
-Postulation : {{_postulation | json}}
-</pre>
+<div fxLayoutAlign="center center" *ngIf="status === 'sending'">
+
+  <div fxLayout="row" class="container">
+
+    <div fxLayout="column" fxLayoutGap="50px">
+
+      <div fxFlexAlign="center">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <p class="wait-message">
+        Enviando postulación...
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div fxLayoutAlign="center center" *ngIf="status === 'success'">
+
+  <div fxLayout="row" class="container">
+
+    <div fxLayout="column" fxLayoutGap="50px">
+
+      <div fxFlexAlign="center">
+        <img src="./assets/images/success.png">
+      </div>
+
+      <p class="wait-message">
+        Postulación procesada con éxito!!
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div fxLayoutAlign="center center" *ngIf="status === 'error'">
+
+  <div fxLayout="row" class="container">
+
+    <div fxLayout="column" fxLayoutGap="50px">
+
+      <div fxFlexAlign="center">
+        <img src="./assets/images/error.png">
+      </div>
+
+      <p class="wait-message">
+        No se pudo procesar la potulación...
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

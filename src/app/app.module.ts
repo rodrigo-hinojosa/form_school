@@ -1,5 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 
@@ -19,6 +22,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -40,6 +45,8 @@ import {DvPipe} from './pipes/dv.pipe';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    CommonModule,
+    HttpClientModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     MatStepperModule,
@@ -53,6 +60,8 @@ import {DvPipe} from './pipes/dv.pipe';
     MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
     MatMomentDateModule,
     NgxMatSelectSearchModule
   ],

@@ -7,6 +7,10 @@ export class DvPipe implements PipeTransform {
 
   transform(value: any): any {
 
+    value = value.replace(/\./g, ''); // replace "." for with nothing
+
+    value = value.replace(/^\D+/g, ''); // replace all leading non-digits with nothing
+
     if (value === '') {
 
       return '';

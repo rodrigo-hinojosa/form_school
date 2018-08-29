@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
+
+import * as moment from 'moment';
 
 import {Utils} from '@app/utilities';
 import {countries} from '@app/utilities/countries';
@@ -18,6 +20,7 @@ import {Postulation} from '@app/models/postulation';
 
 import {POSTULATION_CONFIG as config} from '@app/postulation.config';
 import {DialogComponent} from '@app/dialog/dialog.component';
+import {PostulationService} from '@app/services/postulation.service';
 
 @Component({
   selector: 'app-form',
@@ -58,7 +61,9 @@ export class FormComponent implements OnInit {
   private monthNames: Array<any>;
 
   constructor(private _formBuilder: FormBuilder,
-              private _dialog: MatDialog) {
+              private _dialog: MatDialog,
+              private _snackBar: MatSnackBar,
+              private _postulationService: PostulationService) {
   }
 
   ngOnInit() {
@@ -120,6 +125,14 @@ export class FormComponent implements OnInit {
 
   private fillPostulationModel() {
 
+    this.firstStepPostulationForm.value.studentBirthday = moment(this.firstStepPostulationForm.value.studentBirthday).format('DD/MM/YYYY');
+
+    this.secondStepPostulationForm.value.fatherBirthday = moment(this.secondStepPostulationForm.value.fatherBirthday).format('DD/MM/YYYY');
+
+    this.thirdStepPostulationForm.value.motherBirthday = moment(this.thirdStepPostulationForm.value.motherBirthday).format('DD/MM/YYYY');
+
+    this.fifthStepPostulationForm.value.dateLastConsultation = moment(this.fifthStepPostulationForm.value.dateLastConsultation).format('DD/MM/YYYY');
+
     this.firstStepPostulationForm.value.studentRunDv = Utils.getDv(this.firstStepPostulationForm.value.studentRun);
 
     this.secondStepPostulationForm.value.fatherRunDv = Utils.getDv(this.secondStepPostulationForm.value.fatherRun);
@@ -173,16 +186,16 @@ export class FormComponent implements OnInit {
 
     this.firstStepPostulationForm = this._formBuilder.group({
       studentRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
-      studentRunDv: [''],
-      studentName: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentLastname: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentNationality: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentBirthday: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueDate]],
-      studentPhone: ['', [Validators.required, Validators.maxLength(9), InputsValidators.checkValidValueNumbers]],
-      studentAddres: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      studentRunDv: [' '],
+      studentName: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      studentLastname: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      studentNationality: ['', [Validators.required, Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      studentBirthday: ['', [Validators.required, Validators.maxLength(10), InputsValidators.checkValidValueDate]],
+      studentPhone: ['', [Validators.required, Validators.maxLength(11), InputsValidators.checkValidValueNumbers]],
+      studentAddres: ['', [Validators.required, Validators.maxLength(200), InputsValidators.checkValidValueLv2]],
       studentCondominium: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       studentAddresDivision: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentCourseLevel: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      studentCourseLevel: ['', [Validators.required, Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
       studentSchoolWhereHeComes: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       studentAnotherPostulatedSchool: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       selectCountriesFilter: [''],
@@ -197,10 +210,10 @@ export class FormComponent implements OnInit {
     this.secondStepPostulationForm = this._formBuilder.group({
       fatherRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
       fatherRunDv: [''],
-      fatherName: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      fatherLastname: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      fatherBirthday: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueDate]],
-      fatherPhone: ['', [Validators.required, Validators.maxLength(9), InputsValidators.checkValidValueNumbers]],
+      fatherName: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      fatherLastname: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      fatherBirthday: ['', [Validators.required, Validators.maxLength(10), InputsValidators.checkValidValueDate]],
+      fatherPhone: ['', [Validators.required, Validators.maxLength(11), InputsValidators.checkValidValueNumbers]],
       fatherSecondary: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       fatherUniversityStudies: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       fatherProfession: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
@@ -216,10 +229,10 @@ export class FormComponent implements OnInit {
     this.thirdStepPostulationForm = this._formBuilder.group({
       motherRun: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueNumbers]],
       motherRunDv: [''],
-      motherName: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      motherLastname: ['', [Validators.required, Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      motherBirthday: ['', [Validators.required, Validators.maxLength(8), InputsValidators.checkValidValueDate]],
-      motherPhone: ['', [Validators.required, Validators.maxLength(9), InputsValidators.checkValidValueNumbers]],
+      motherName: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      motherLastname: ['', [Validators.required, Validators.maxLength(80), InputsValidators.checkValidValueLv2]],
+      motherBirthday: ['', [Validators.required, Validators.maxLength(10), InputsValidators.checkValidValueDate]],
+      motherPhone: ['', [Validators.required, Validators.maxLength(11), InputsValidators.checkValidValueNumbers]],
       motherSecondary: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       motherUniversityStudies: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
       motherProfession: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
@@ -233,11 +246,11 @@ export class FormComponent implements OnInit {
   private createFourthStepPostulationForm(): void {
 
     this.fourthStepPostulationForm = this._formBuilder.group({
-      studentLivesWith: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      numberOfChildren: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      placeThatHeOccupies: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      parentsSituations: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      familySituationOthersSpecifications: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]]
+      studentLivesWith: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      numberOfChildren: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      placeThatHeOccupies: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      parentsSituations: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      familySituationOthersSpecifications: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]]
     });
 
     this.fourthStepPostulationForm.controls['familySituationOthersSpecifications'].disable();
@@ -248,15 +261,15 @@ export class FormComponent implements OnInit {
 
     this.fifthStepPostulationForm = this._formBuilder.group({
       hasBeenAttendedBySpecialist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      psychologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      neurologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      psychiatrist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      ophthalmologist: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentBackgroundOthers: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      studentBackgroundOthersSpecifications: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
+      psychologist: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      neurologist: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      psychiatrist: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      ophthalmologist: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      studentBackgroundOthers: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      studentBackgroundOthersSpecifications: ['', [Validators.maxLength(200), InputsValidators.checkValidValueLv2]],
       specialistName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      dateLastConsultation: ['', [Validators.maxLength(8), InputsValidators.checkValidValueDate]],
-      reason: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      dateLastConsultation: ['', [Validators.maxLength(10), InputsValidators.checkValidValueDate]],
+      reason: ['', [Validators.maxLength(200), InputsValidators.checkValidValueLv2]]
     });
 
     this.fifthStepPostulationForm.disable();
@@ -268,7 +281,7 @@ export class FormComponent implements OnInit {
   private createSixthStepPostulationForm(): void {
 
     this.sixthStepPostulationForm = this._formBuilder.group({
-      reasonsForApplicationDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      reasonsForApplicationDetails: ['', [Validators.maxLength(1000), InputsValidators.checkValidValueLv2]]
     });
 
   }
@@ -276,7 +289,7 @@ export class FormComponent implements OnInit {
   private createSeventhStepPostulationForm(): void {
 
     this.seventhStepPostulationForm = this._formBuilder.group({
-      studentDescriptionDetails: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      studentDescriptionDetails: ['', [Validators.maxLength(1000), InputsValidators.checkValidValueLv2]]
     });
 
   }
@@ -284,10 +297,10 @@ export class FormComponent implements OnInit {
   private createEighthStepPostulationForm(): void {
 
     this.eighthStepPostulationForm = this._formBuilder.group({
-      personWhoInscribesName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      personWhoInscribesLastname: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      personWhoInscribesRelationship: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      personWhoInscribesOthers: ['', [Validators.maxLength(500), InputsValidators.checkValidValueLv2]]
+      personWhoInscribesName: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesLastname: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesRelationship: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      personWhoInscribesOthers: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]]
     });
 
   }
@@ -295,19 +308,61 @@ export class FormComponent implements OnInit {
   private createNinethStepPostulationForm(): void {
 
     this.ninethStepPostulationForm = this._formBuilder.group({
-      attorneyDeclaration: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      attorneyFullName: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]],
-      agreeDeclaration: ['', [Validators.maxLength(100), InputsValidators.checkValidValueLv2]]
+      attorneyDeclaration: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      attorneyFullName: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]],
+      agreeDeclaration: ['', [Validators.maxLength(50), InputsValidators.checkValidValueLv2]]
     });
 
   }
 
-  private OpenDialogToShow(postulation: Postulation): void {
+  private openDialogToProccess(): void {
 
     this._dialog.open(DialogComponent, {
-      data: postulation,
-      height: '600px',
-      width: '600px'
+      data: 'sending',
+      height: '300px',
+      width: '400px',
+      disableClose: true
+    });
+
+  }
+
+
+  private openSnackRedirection(): void {
+
+    this._snackBar.open('Redireccionando......', 'OK', {
+      duration: 5000,
+      panelClass: 'snackbar-success'
+    });
+
+  }
+
+  private submitSuccess(idPostulation: string): void {
+
+    this._dialog.open(DialogComponent, {
+      data: 'success',
+      height: '300px',
+      width: '400px',
+      disableClose: true
+    });
+
+    this.openSnackRedirection();
+
+    setTimeout(() => {
+
+      this._postulationService.redirection(idPostulation);
+
+    }, 5000);
+
+  }
+
+  private submitError(): void {
+
+    this._dialog.closeAll();
+
+    this._dialog.open(DialogComponent, {
+      data: 'error',
+      height: '300px',
+      width: '400px'
     });
 
   }
@@ -416,7 +471,28 @@ export class FormComponent implements OnInit {
 
     this.fillPostulationModel();
 
-    this.OpenDialogToShow(this.postulation);
+    this.openDialogToProccess();
+
+    this._postulationService.savePostulation(this.postulation).subscribe(
+      responseData => {
+
+        if (responseData.code === 200) {
+
+          this.submitSuccess(responseData.idPostulation);
+
+        } else {
+
+          this.submitError();
+
+        }
+
+      },
+      err => {
+
+        this.submitError();
+
+      }
+    );
 
   }
 
